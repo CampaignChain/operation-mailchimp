@@ -1,0 +1,33 @@
+{
+    "name": "campaignchain/operation-mailchimp",
+    "description": "Add upcoming newsletter campaign",
+    "type": "campaignchain-operation",
+    "license": "Apache-2.0",
+    "homepage": "http://www.campaignchain.com",
+    "authors": [
+        {
+            "name": "Sandro Groganz",
+            "email": "sandro@campaignchain.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": { "CampaignChain\\Operation\\MailChimpBundle\\": "" }
+    },
+    "extra": {
+        "campaignchain": {
+            "kernel": {
+                "classes": [
+                    "CampaignChain\\Operation\\MailChimpBundle\\CampaignChainOperationMailChimpBundle"
+                ],
+                "routing":
+                {
+                    "name": "campaignchain_operation_mailchimp",
+                    "resource": "@CampaignChainOperationMailChimpBundle/Resources/config/routing.yml",
+                    "prefix": "/"
+                }
+            }
+        }
+    }
+}

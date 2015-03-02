@@ -1,0 +1,17 @@
+
+modules:
+    campaignchain-mailchimp-newsletter:
+        display_name: Add upcoming newsletter campaign
+        services: 
+            report: campaignchain.job.report.mailchimp
+        params: 
+            owns_location: true
+        metrics:
+            activity:
+                - "Unsubscribes"
+                - "Opens"
+                - "Unique_opens"
+                - "Clicks"
+                - "Unique_clicks"
+                - "Emails_sent"
+                - "Users_who_clicked"

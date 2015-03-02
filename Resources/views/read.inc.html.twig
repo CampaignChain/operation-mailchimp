@@ -1,0 +1,27 @@
+{#
+This file is part of the CampaignChain package.
+
+(c) Sandro Groganz <sandro@campaignchain.com>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+{% stylesheets '@campaignchain_operation_mailchimp_css' %}
+<link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+{% endstylesheets %}
+
+{% include 'CampaignChainCoreBundle:Operation:field_header.html.twig' %}
+<div class="embed-responsive embed-responsive-16by9">
+    <iframe
+        id="mailchimp-newsletter-content" class="embed-responsive-item"
+        src="{{ path('campaignchain_activity_mailchimp_preview',{'id':newsletter.getCampaignId()}) }}"
+        ></iframe>
+</div>
+{% include 'CampaignChainCoreBundle:Operation:field_footer.html.twig' %}
+
+<div class="btn-toolbar" role="toolbar">
+    <div class="btn-group" role="group" aria-label="...">
+        <a href="https://admin.mailchimp.com/campaigns/show?id={{ newsletter.getWebId() }}" target="_blank" class="btn btn-default"><i class="fa fa-external-link"></i> Edit in MailChimp</a>
+    </div>
+</div>

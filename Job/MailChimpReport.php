@@ -13,6 +13,7 @@ namespace CampaignChain\Operation\MailChimpBundle\Job;
 use CampaignChain\CoreBundle\Entity\SchedulerReportOperation;
 use CampaignChain\CoreBundle\Job\JobReportInterface;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MailChimpReport implements JobReportInterface
 {
@@ -30,7 +31,7 @@ class MailChimpReport implements JobReportInterface
     protected $message;
     protected $operation;
 
-    public function __construct(EntityManager $em, $container)
+    public function __construct(EntityManager $em, ContainerInterface $container)
     {
         $this->em = $em;
         $this->container = $container;

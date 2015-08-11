@@ -42,17 +42,17 @@ class MailChimpNewsletter extends Meta
     protected $webId;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $listId;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, unique=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $folderId;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, unique=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $templateId;
 

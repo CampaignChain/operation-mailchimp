@@ -6,6 +6,12 @@
 # file that was distributed with this source code.
 
 services:
-#    campaign_chain_operation_mail_chimp.example:
-#        class: CampaignChain\Operation\MailChimpBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    campaignchain.job.operation.mailchimp.newsletter:
+        class: CampaignChain\Operation\MailChimpBundle\Job\SendNewsletter
+        arguments: [ @doctrine.orm.entity_manager, @service_container ]
+    campaignchain.job.report.mailchimp.newsletter:
+        class: CampaignChain\Operation\MailChimpBundle\Job\ReportSendNewsletter
+        arguments: [ @doctrine.orm.entity_manager, @service_container ]
+    campaignchain.operation.mailchimp.newsletter:
+        class: CampaignChain\Operation\MailChimpBundle\EntityService\MailChimpNewsletter
+        arguments: [ @doctrine.orm.entity_manager ]

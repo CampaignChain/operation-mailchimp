@@ -10,67 +10,22 @@
 
 namespace CampaignChain\Operation\MailChimpBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
+use CampaignChain\CoreBundle\Form\Type\OperationType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
 
-class MailChimpOperationType extends AbstractType
+class MailChimpOperationType extends OperationType
 {
-    private $status;
-    private $view = 'default';
-    protected $em;
-    protected $container;
-    private $location;
-    private $newsletters;
-
-    public function __construct(EntityManager $em, ContainerInterface $container)
-    {
-        $this->em = $em;
-        $this->container = $container;
-    }
-
-    public function setStatus($status){
-        $this->status = $status;
-    }
-
-    public function setView($view){
-        $this->view = $view;
-    }
-
-    public function setLocation($location){
-        $this->location = $location;
-    }
-
-    public function setNewsletters($newsletters){
-        $this->newsletters = $newsletters;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('newsletter', 'choice', array(
-            'choices'   => $this->newsletters,
+            'choices'   => $this->content,
             'required'  => false,
             'label' => 'Newsletter',
             'attr' => array(
                 'placeholder' => 'Select a newsletter',
             ),
         ));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        if($this->location){
-            $view->vars['location'] = $this->location;
-        } else {
-            $view->vars['location'] = $options['data']->getOperation()->getActivity()->getLocation();
-        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

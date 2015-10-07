@@ -14,5 +14,5 @@ modules:
                 - "Unique opens"
                 - "Clicks"
                 - "Unique clicks"
-                - "Emails_sent"
+                - "Emails sent"
                 - "Users who clicked"

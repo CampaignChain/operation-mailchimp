@@ -23,7 +23,7 @@ class ReportSendNewsletter implements JobReportInterface
     const METRIC_UNIQUE_OPENS = 'Unique opens';
     const METRIC_CLICKS = 'Clicks';
     const METRIC_UNIQUE_CLICKS = 'Unique clicks';
-    const METRIC_EMAILS_SENT = 'Emails_sent';
+    const METRIC_EMAILS_SENT = 'Emails sent';
     const METRIC_USERS_WHO_CLICKED = 'Users who clicked';
 
     protected $em;

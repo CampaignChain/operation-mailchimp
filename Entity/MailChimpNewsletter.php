@@ -12,6 +12,7 @@ namespace CampaignChain\Operation\MailChimpBundle\Entity;
 
 use CampaignChain\CoreBundle\Entity\Meta;
 use Doctrine\ORM\Mapping as ORM;
+use CampaignChain\CoreBundle\Util\ParserUtil;
 
 /**
  * @ORM\Entity
@@ -190,7 +191,7 @@ class MailChimpNewsletter extends Meta
      */
     public function setArchiveUrlLong($archiveUrlLong)
     {
-        $this->archiveUrlLong = $archiveUrlLong;
+        $this->archiveUrlLong = ParserUtil::sanitizeUrl($archiveUrlLong);
     }
 
     /**

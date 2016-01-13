@@ -44,4 +44,13 @@ class MailChimpNewsletter implements OperationServiceInterface
         $this->em->persist($clonedNewsletter);
         $this->em->flush();
     }
+    public function removeOperation($id){
+        try {
+            $operation = $this->getNewsletterByOperation($id);
+            $this->em->remove($operation);
+            $this->em->flush();
+        } catch (\Exception $e) {
+
+        }
+    }
 }

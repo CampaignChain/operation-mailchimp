@@ -11,6 +11,7 @@
 namespace CampaignChain\Operation\MailChimpBundle\Job;
 
 use CampaignChain\CoreBundle\Entity\Action;
+use CampaignChain\CoreBundle\Exception\ExternalApiException;
 use Doctrine\ORM\EntityManager;
 use CampaignChain\CoreBundle\Entity\Medium;
 use CampaignChain\CoreBundle\Job\JobActionInterface;
@@ -129,7 +130,7 @@ class SendNewsletter implements JobActionInterface
 
             return self::STATUS_OK;
         } else {
-            throw new \Exception(print_r($readyResponse['items'], true));
+            throw new ExternalApiException($readyResponse['items']);
         }
     }
 }

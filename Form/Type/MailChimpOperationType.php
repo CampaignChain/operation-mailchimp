@@ -12,15 +12,22 @@ namespace CampaignChain\Operation\MailChimpBundle\Form\Type;
 
 use CampaignChain\CoreBundle\Form\Type\OperationType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class MailChimpOperationType
+ * @package CampaignChain\Operation\MailChimpBundle\Form\Type
+ */
 class MailChimpOperationType extends OperationType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('newsletter', 'choice', array(
             'choices'   => $this->content,
-            'required'  => false,
+            'empty_value' => true,
             'label' => 'Newsletter',
             'attr' => array(
                 'placeholder' => 'Select a newsletter',
@@ -28,12 +35,9 @@ class MailChimpOperationType extends OperationType
         ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $defaults = array();
-        $resolver->setDefaults($defaults);
-    }
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'campaignchain_operation_mailchimp_newsletter';

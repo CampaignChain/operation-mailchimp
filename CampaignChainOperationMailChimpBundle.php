@@ -17,8 +17,13 @@
 
 namespace CampaignChain\Operation\MailChimpBundle;
 
+use CampaignChain\Operation\MailChimpBundle\DependencyInjection\CampaignChainOperationMailChimpExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class CampaignChainOperationMailChimpBundle extends Bundle
 {
+    public function getContainerExtension()
+    {
+        return new CampaignChainOperationMailChimpExtension();
+    }
 }

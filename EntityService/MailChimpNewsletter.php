@@ -30,6 +30,17 @@ class MailChimpNewsletter implements OperationServiceInterface
         $this->em = $em;
     }
 
+    public function getContent(Operation $operation)
+    {
+        return $this->getNewsletterByOperation($operation->getId());
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \Exception
+     * @deprecated Use getContent(Operation $operation) instead.
+     */
     public function getNewsletterByOperation($id){
         $newsletter = $this->em->getRepository('CampaignChainOperationMailChimpBundle:MailChimpNewsletter')
             ->findOneByOperation($id);

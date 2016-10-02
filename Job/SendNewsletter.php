@@ -97,10 +97,11 @@ class SendNewsletter implements JobActionInterface
         // Process URLs in message and save the new message text, now including
         // the replaced URLs with the Tracking ID attached for call to action tracking.
         $ctaService = $this->container->get('campaignchain.core.cta');
+        $options['format'] = CTAService::FORMAT_HTML;
         $ctaNewsletterContent = $ctaService->processCTAs(
                                     $newsletterContent['html'],
                                     $localNewsletter->getOperation(),
-                                    CTAService::FORMAT_HTML
+                                    $options
                                 )->getContent();
 
         $updatedNewsletter = $client->campaigns->update(

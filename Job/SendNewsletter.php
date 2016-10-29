@@ -19,7 +19,7 @@ namespace CampaignChain\Operation\MailChimpBundle\Job;
 
 use CampaignChain\CoreBundle\Entity\Action;
 use CampaignChain\CoreBundle\Exception\ExternalApiException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use CampaignChain\CoreBundle\Entity\Medium;
 use CampaignChain\CoreBundle\Job\JobActionInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,9 +33,9 @@ class SendNewsletter implements JobActionInterface
     protected $operation;
     protected $url;
 
-    public function __construct(EntityManager $em, $container)
+    public function __construct(ManagerRegistry $managerRegistry, $container)
     {
-        $this->em = $em;
+        $this->em = $managerRegistry->getManager();
         $this->container = $container;
     }
 

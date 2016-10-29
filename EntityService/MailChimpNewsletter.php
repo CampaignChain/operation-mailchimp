@@ -17,7 +17,7 @@
 
 namespace CampaignChain\Operation\MailChimpBundle\EntityService;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use CampaignChain\CoreBundle\EntityService\OperationServiceInterface;
 use CampaignChain\CoreBundle\Entity\Operation;
 
@@ -25,9 +25,9 @@ class MailChimpNewsletter implements OperationServiceInterface
 {
     protected $em;
 
-    public function __construct(EntityManager $em)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->em = $em;
+        $this->em = $managerRegistry->getManager();
     }
 
     public function getContent(Operation $operation)

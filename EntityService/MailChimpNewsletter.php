@@ -56,7 +56,7 @@ class MailChimpNewsletter implements OperationServiceInterface
 
     public function cloneOperation(Operation $oldOperation, Operation $newOperation)
     {
-        $newsletter = $this->getNewsletterByOperation($oldOperation);
+        $newsletter = $this->getNewsletterByOperation($oldOperation->getId());
         $clonedNewsletter = clone $newsletter;
         $clonedNewsletter->setOperation($newOperation);
         $this->em->persist($clonedNewsletter);

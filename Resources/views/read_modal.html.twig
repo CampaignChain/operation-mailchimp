@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
-{% extends 'CampaignChainCoreBundle:Base:base_modal.html.twig' %}
+{% extends 'CampaignChainCoreBundle:Operation:read_modal.html.twig' %}
 
-{% block body %}
-    {% include 'CampaignChainOperationMailChimpBundle::read.inc.html.twig' %}
+{% block operation %}
+    {% include 'CampaignChainOperationMailChimpBundle::_read.html.twig' %}
 {% endblock %}

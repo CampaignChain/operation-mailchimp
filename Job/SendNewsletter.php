@@ -138,7 +138,14 @@ class SendNewsletter implements JobActionInterface
 
             return self::STATUS_OK;
         } else {
-            throw new ExternalApiException($readyResponse['items']);
+            // Find the error.
+            foreach($readyResponse['items'] as $values){
+                if($values['type'] == 'cross-large'){
+                    throw new ExternalApiException($values['heading'].': '.$values['details']);
+                }
+            }
+
+            throw new ExternalApiException('Unknown error when sending MailChimp newsletter.');
         }
     }
 }

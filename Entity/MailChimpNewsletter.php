@@ -45,7 +45,7 @@ class MailChimpNewsletter extends Meta
     protected $campaignId;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, unique=true)
+     * @ORM\Column(type="integer", nullable=true, unique=true)
      */
     protected $webId;
 

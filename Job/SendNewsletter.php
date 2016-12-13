@@ -17,6 +17,7 @@
 
 namespace CampaignChain\Operation\MailChimpBundle\Job;
 
+use CampaignChain\Channel\MailChimpBundle\REST\MailChimpClient;
 use CampaignChain\CoreBundle\Entity\Action;
 use CampaignChain\CoreBundle\Exception\ExternalApiException;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -56,18 +57,14 @@ class SendNewsletter implements JobActionInterface
         }
 
         // Connect to MailChimp REST API.
+        /** @var MailChimpClient $restService */
         $restService = $this->container->get('campaignchain.channel.mailchimp.rest.client');
         $client = $restService->connectByActivity($localNewsletter->getOperation()->getActivity());
 
         /*
          * Get remote newsletter data.
          */
-
-        $remoteNewsletterData = $client->campaigns->getList(array(
-            'campaign_id' => $localNewsletter->getCampaignId(),
-        ));
-
-        $remoteNewsletter = $remoteNewsletterData['data'][0];
+        $remoteNewsletter = $client->getCampaign($localNewsletter->getCampaignId());
 
         /*
          * Grab the raw newsletter content and parse all included URLs to see
@@ -76,22 +73,11 @@ class SendNewsletter implements JobActionInterface
          */
 
         // Get the newsletter content in raw HTML format.
-        $newsletterContent = $client->campaigns->content(
-            $localNewsletter->getCampaignId(),
-            array(
-                'view' => 'raw',
-            )
-        );
+        $newsletterContent = $client->getCampaignHTML($localNewsletter->getCampaignId());
 
         // Set template_id to null to be able to paste parsed HTML.
-        if($remoteNewsletter['template_id'] != 0){
-            $client->campaigns->update(
-                $localNewsletter->getCampaignId(),
-                'options',
-                array(
-                    'template_id' => null,
-                )
-            );
+        if($remoteNewsletter['settings']['template_id'] != 0){
+            $client->resetCampaignTemplate($localNewsletter->getCampaignId());
         }
 
         // Process URLs in message and save the new message text, now including
@@ -99,30 +85,33 @@ class SendNewsletter implements JobActionInterface
         $ctaService = $this->container->get('campaignchain.core.cta');
         $options['format'] = CTAService::FORMAT_HTML;
         $ctaNewsletterContent = $ctaService->processCTAs(
-                                    $newsletterContent['html'],
+                                    $newsletterContent,
                                     $localNewsletter->getOperation(),
                                     $options
                                 )->getContent();
 
-        $updatedNewsletter = $client->campaigns->update(
+        $updatedNewsletter = $client->updateCampaignHTML(
             $localNewsletter->getCampaignId(),
-            'content',
-            array(
-                'html' => $ctaNewsletterContent,
-            )
+            $ctaNewsletterContent
         );
 
+        // Catch error if MailChimp campaign was already sent.
+        if(isset($updatedNewsletter['status']) && $updatedNewsletter['status'] == 400){
+            $this->message = 'This MailChimp campaign was already sent.';
+            return self::STATUS_WARNING;
+        }
+
         // Check if newsletter is ready to be sent.
-        $readyResponse = $client->campaigns->ready($localNewsletter->getCampaignId());
+        $readyResponse = $client->getCampaignSendChecklist($localNewsletter->getCampaignId());
 
         if($readyResponse['is_ready']) {
             // Send the newsletter.
-            $client->campaigns->send($localNewsletter->getCampaignId());
+            $client->sendCampaign($localNewsletter->getCampaignId());
 
             // Update local newsletter data.
-            $localNewsletter->setContentUpdatedTime(
-                new \DateTime($updatedNewsletter['data']['content_updated_time'])
-            );
+//            $localNewsletter->setContentUpdatedTime(
+//                new \DateTime($updatedNewsletter['data']['content_updated_time'])
+//            );
 
             $localNewsletter->getOperation()->setStatus(Action::STATUS_CLOSED);
 
@@ -133,14 +122,14 @@ class SendNewsletter implements JobActionInterface
             $this->em->flush();
 
             $this->message = 'Successfully sent the MailChimp newsletter campaign with the title "'.
-                $remoteNewsletter['title'].'" and subject "'.
-                $remoteNewsletter['subject'].'". View it here: '.$remoteNewsletter['archive_url_long'];
+                $remoteNewsletter['settings']['title'].'" and subject "'.
+                $remoteNewsletter['settings']['subject_line'].'". View it here: '.$remoteNewsletter['archive_url'];
 
             return self::STATUS_OK;
         } else {
             // Find the error.
             foreach($readyResponse['items'] as $values){
-                if($values['type'] == 'cross-large'){
+                if($values['type'] == 'error'){
                     throw new ExternalApiException($values['heading'].': '.$values['details']);
                 }
             }

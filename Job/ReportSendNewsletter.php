@@ -17,6 +17,7 @@
 
 namespace CampaignChain\Operation\MailChimpBundle\Job;
 
+use CampaignChain\Channel\MailChimpBundle\REST\MailChimpClient;
 use CampaignChain\CoreBundle\Entity\SchedulerReportOperation;
 use CampaignChain\CoreBundle\Job\JobReportInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -76,31 +77,32 @@ class ReportSendNewsletter implements JobReportInterface
         $newsletterService = $this->container->get('campaignchain.operation.mailchimp.newsletter');
         $newsletter = $newsletterService->getNewsletterByOperation($operation);
 
+        /** @var MailChimpClient $restService */
         $restService = $this->container->get('campaignchain.channel.mailchimp.rest.client');
         $client = $restService->connectByActivity($operation->getActivity());
 
-        $reportSummary = $client->reports->summary($newsletter->getCampaignId());
+        $report = $client->getCampaignReport($newsletter->getCampaignId());
 
         // Add report data.
-        $facts[self::METRIC_UNSUBSCRIBES]       = $reportSummary['unsubscribes'];
-        $facts[self::METRIC_OPENS]              = $reportSummary['opens'];
-        $facts[self::METRIC_UNIQUE_OPENS]       = $reportSummary['unique_opens'];
-        $facts[self::METRIC_CLICKS]             = $reportSummary['clicks'];
-        $facts[self::METRIC_UNIQUE_CLICKS]      = $reportSummary['unique_clicks'];
-        $facts[self::METRIC_EMAILS_SENT]        = $reportSummary['emails_sent'];
-        $facts[self::METRIC_USERS_WHO_CLICKED]  = $reportSummary['users_who_clicked'];
+        $facts[self::METRIC_UNSUBSCRIBES]       = $report['unsubscribed'];
+        $facts[self::METRIC_OPENS]              = $report['opens']['opens_total'];
+        $facts[self::METRIC_UNIQUE_OPENS]       = $report['opens']['unique_opens'];
+        $facts[self::METRIC_CLICKS]             = $report['clicks']['clicks_total'];
+        $facts[self::METRIC_UNIQUE_CLICKS]      = $report['clicks']['unique_clicks'];
+        $facts[self::METRIC_EMAILS_SENT]        = $report['emails_sent'];
+        $facts[self::METRIC_USERS_WHO_CLICKED]  = $report['clicks']['unique_subscriber_clicks'];
 
         $factService = $this->container->get('campaignchain.core.fact');
         $factService->addFacts('activity', self::OPERATION_BUNDLE_NAME, $operation, $facts);
 
         $this->message = 'Added to report: '.
-            'unsubscribes = '.$reportSummary['unsubscribes'].', '.
-            'opens = '.$reportSummary['opens'].', '.
-            'unique opens = '.$reportSummary['unique_opens'].', '.
-            'clicks = '.$reportSummary['clicks'].', '.
-            'unique clicks = '.$reportSummary['unique_clicks'].', '.
-            'emails sent = '.$reportSummary['emails_sent'].', '.
-            'users who clicked = '.$reportSummary['users_who_clicked'].'.';
+            'unsubscribes = '.$report['unsubscribed'].', '.
+            'opens = '.$report['opens']['opens_total'].', '.
+            'unique opens = '.$report['opens']['unique_opens'].', '.
+            'clicks = '.$report['clicks']['clicks_total'].', '.
+            'unique clicks = '.$report['clicks']['unique_clicks'].', '.
+            'emails sent = '.$report['emails_sent'].', '.
+            'users who clicked = '.$report['clicks']['unique_subscriber_clicks'].'.';
 
         return self::STATUS_OK;
     }

@@ -19,6 +19,5 @@ assetic:
             inputs:
                 - '@CampaignChainOperationMailChimpBundle/Resources/public/css/mailchimp.css'
 twig:
-    form:
-        resources:
-            - 'CampaignChainOperationMailChimpBundle:Form:fields.html.twig'
+    form_themes:
+        - 'CampaignChainOperationMailChimpBundle:Form:fields.html.twig'

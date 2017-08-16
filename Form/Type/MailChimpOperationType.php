@@ -34,7 +34,7 @@ class MailChimpOperationType extends OperationType
     {
         $builder->add('newsletter', 'choice', array(
             'choices'   => $this->content,
-            'empty_value' => true,
+            'placeholder' => true,
             'label' => 'Newsletter',
             'attr' => array(
                 'placeholder' => 'Select a newsletter',

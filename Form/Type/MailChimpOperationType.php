@@ -45,7 +45,7 @@ class MailChimpOperationType extends OperationType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'campaignchain_operation_mailchimp_newsletter';
     }

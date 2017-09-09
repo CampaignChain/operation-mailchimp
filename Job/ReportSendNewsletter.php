@@ -56,6 +56,7 @@ class ReportSendNewsletter implements JobReportInterface
         $scheduler->setInterval('1 hour');
         $scheduler->setEndAction($operation->getActivity()->getCampaign());
         $this->em->persist($scheduler);
+        $this->em->flush();
 
         $facts[self::METRIC_UNSUBSCRIBES]       = 0;
         $facts[self::METRIC_OPENS]              = 0;

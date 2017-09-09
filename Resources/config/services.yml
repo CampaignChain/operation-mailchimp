@@ -28,3 +28,10 @@ services:
     campaignchain.operation.mailchimp.newsletter:
         class: CampaignChain\Operation\MailChimpBundle\EntityService\MailChimpNewsletter
         arguments: [ '@doctrine' ]
+    campaignchain.operation.mailchimp.form.type.schedule:
+        class: CampaignChain\Operation\MailChimpBundle\Form\Type\MailChimpOperationType
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+        tags:
+            - { name: form.type }

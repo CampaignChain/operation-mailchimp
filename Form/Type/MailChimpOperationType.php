@@ -32,8 +32,10 @@ class MailChimpOperationType extends OperationType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->setOptions($options);
+
         $builder->add('newsletter', 'choice', array(
-            'choices'   => $this->content,
+            'choices'   => $options['data'],
             'placeholder' => true,
             'label' => 'Newsletter',
             'attr' => array(
